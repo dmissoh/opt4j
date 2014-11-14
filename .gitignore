@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Directories #
 /build/
 /bin/
@@ -8,10 +9,18 @@ target/
  
 *.class
  
+=======
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+>>>>>>> 44a21a4b4d66e8ac42d1ee7536d0f2b0523f3c7c
 # Package Files #
 *.jar
 *.war
 *.ear
+<<<<<<< HEAD
 *.db
  
 ######################
@@ -76,3 +85,8 @@ local.properties
 .idea
 
 
+=======
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+>>>>>>> 44a21a4b4d66e8ac42d1ee7536d0f2b0523f3c7c
