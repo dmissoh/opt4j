@@ -22,14 +22,15 @@ public class StartMenuOptimization {
         // The problem definition module
         MenuModule menuModule = new MenuModule();
 
-        // The optimization module
+        /**
+         * The brute force optimization module
+         */
         RandomSearchModule randomSearchModule = new RandomSearchModule();
 
         /**
          * The optimization modules below changes the order in of parts (starter, main, dessert) since mutation are done
          */
         EvolutionaryAlgorithmModule evolutionaryAlgorithmModule = new EvolutionaryAlgorithmModule();
-        evolutionaryAlgorithmModule.setCrossoverRate(1);
         SimulatedAnnealingModule simulatedAnnealingModule = new SimulatedAnnealingModule();
 
         /**
@@ -40,12 +41,12 @@ public class StartMenuOptimization {
 
         // The viewer module
         ViewerModule viewer = new ViewerModule();
-        viewer.setCloseOnStop(false);
+        viewer.setCloseOnStop(true);
 
         Opt4JTask task = new Opt4JTask(false);
 
-        //task.init(evolutionaryAlgorithmModule, menuModule, viewer);
-        task.init(evolutionaryAlgorithmModule, menuModule , viewer);
+        task.init(randomSearchModule, menuModule, viewer);
+        //task.init(evolutionaryAlgorithmModule, menuModule , viewer);
 
         try {
             task.execute();

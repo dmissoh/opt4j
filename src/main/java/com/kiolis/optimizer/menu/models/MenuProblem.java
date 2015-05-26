@@ -73,7 +73,6 @@ public class MenuProblem {
             final double starches = generateRandom(0, 900) / 6;
 
             final Substance substance = new Substance(i, fruits, dairy, starches, getRandomType());
-            System.out.println("substance: " + substance);
             substances.add(substance);
         }
         return substances;
