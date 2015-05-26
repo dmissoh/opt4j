@@ -10,44 +10,39 @@ import java.util.Collections;
 
 public class MenuCreator implements Creator<SelectGenotype<Substance>> {
 
-    protected final MenuProblem problem;
+  protected final MenuProblem problem;
 
-    @Inject
-    public MenuCreator(MenuProblem problem) {
-        this.problem = problem;
-    }
+  @Inject
+  public MenuCreator(MenuProblem problem) {
+	this.problem = problem;
+  }
 
-    public SelectGenotype<Substance> create() {
-        SelectGenotype<Substance> genotype = new SelectGenotype<Substance>(problem.getSubstances());
-        //genotype.init(random, 6);
-        createTypeBasedGenotype(genotype);
-
-        /*
-        System.out.println("1 " + genotype.getValue(0));
-        System.out.println("2 " + genotype.getValue(1));
-        System.out.println("3 " + genotype.getValue(2));
-        System.out.println("4 " + genotype.getValue(3));
-        System.out.println("5 " + genotype.getValue(4));
-        System.out.println("6 " + genotype.getValue(5));
-        System.out.println(" ");
-        */
-
-        return genotype;
-    }
+  public SelectGenotype<Substance> create() {
+	SelectGenotype<Substance> genotype = new SelectGenotype<>(problem.getSubstances());
+	createTypeBasedGenotype(genotype);
+	return genotype;
+  }
 
 
-    private void createTypeBasedGenotype(SelectGenotype<Substance> genotype){
+  /**
+   * Create a random individual
+   *
+   * @param genotype
+   */
+  private void createTypeBasedGenotype(SelectGenotype<Substance> genotype) {
 
-        Collections.shuffle(problem.getStarters());
-        Collections.shuffle(problem.getMains());
-        Collections.shuffle(problem.getDesserts());
+	// shuffle all starters, mains and desserts
+	Collections.shuffle(problem.getStarters());
+	Collections.shuffle(problem.getMains());
+	Collections.shuffle(problem.getDesserts());
 
-        genotype.add(problem.getIndex(problem.getStarters().get(0)));
-        genotype.add(problem.getIndex(problem.getMains().get(0)));
-        genotype.add(problem.getIndex(problem.getDesserts().get(0)));
+	// and create a new possible menu out of of them
+	genotype.add(problem.getIndex(problem.getStarters().get(0)));
+	genotype.add(problem.getIndex(problem.getMains().get(0)));
+	genotype.add(problem.getIndex(problem.getDesserts().get(0)));
 
-        genotype.add(problem.getIndex(problem.getStarters().get(1)));
-        genotype.add(problem.getIndex(problem.getMains().get(1)));
-        genotype.add(problem.getIndex(problem.getDesserts().get(1)));
-    }
+	genotype.add(problem.getIndex(problem.getStarters().get(1)));
+	genotype.add(problem.getIndex(problem.getMains().get(1)));
+	genotype.add(problem.getIndex(problem.getDesserts().get(1)));
+  }
 }

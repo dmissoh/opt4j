@@ -17,50 +17,50 @@ import org.opt4j.viewer.ViewerModule;
  * Copyright (c) 2014 Kiolis Software France
  */
 public class StartMenuOptimization {
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        // The problem definition module
-        MenuModule menuModule = new MenuModule();
+	// The problem definition module
+	MenuModule menuModule = new MenuModule();
 
-        /**
-         * The brute force optimization module
-         */
-        RandomSearchModule randomSearchModule = new RandomSearchModule();
+	/**
+	 * The brute force optimization module
+	 */
+	RandomSearchModule randomSearchModule = new RandomSearchModule();
 
-        /**
-         * The optimization modules below changes the order in of parts (starter, main, dessert) since mutation are done
-         */
-        EvolutionaryAlgorithmModule evolutionaryAlgorithmModule = new EvolutionaryAlgorithmModule();
-        SimulatedAnnealingModule simulatedAnnealingModule = new SimulatedAnnealingModule();
+	/**
+	 * The optimization modules below changes the order in of parts (starter, main, dessert) since mutation are done
+	 */
+	EvolutionaryAlgorithmModule evolutionaryAlgorithmModule = new EvolutionaryAlgorithmModule();
+	SimulatedAnnealingModule simulatedAnnealingModule = new SimulatedAnnealingModule();
 
-        /**
-         * The optimization modules below are only restricted to DoubleGenotype
-         */
-        MOPSOModule mopsoModule = new MOPSOModule();
-        DifferentialEvolutionModule differentialEvolutionModule = new DifferentialEvolutionModule();// restricted only to DoubleGenotype
+	/**
+	 * The optimization modules below are only restricted to DoubleGenotype
+	 */
+	MOPSOModule mopsoModule = new MOPSOModule();
+	DifferentialEvolutionModule differentialEvolutionModule = new DifferentialEvolutionModule();// restricted only to DoubleGenotype
 
-        // The viewer module
-        ViewerModule viewer = new ViewerModule();
-        viewer.setCloseOnStop(true);
+	// The viewer module
+	ViewerModule viewer = new ViewerModule();
+	viewer.setCloseOnStop(true);
 
-        Opt4JTask task = new Opt4JTask(false);
+	Opt4JTask task = new Opt4JTask(false);
 
-        task.init(randomSearchModule, menuModule, viewer);
-        //task.init(evolutionaryAlgorithmModule, menuModule , viewer);
+	//task.init(randomSearchModule, menuModule, viewer);
+	task.init(evolutionaryAlgorithmModule, menuModule, viewer);
 
-        try {
-            task.execute();
-            Archive archive = task.getInstance(Archive.class);
-            for (Individual individual : archive) {
-                System.out.println("Genotype: " + individual.getGenotype().toString());
-                System.out.println("Phenotype: " + individual.getPhenotype().toString());
-                System.out.println("Objectives: " + individual.getObjectives().toString());
-                System.out.println("");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            task.close();
-        }
-    }
+	try {
+	  task.execute();
+	  Archive archive = task.getInstance(Archive.class);
+	  for (Individual individual : archive) {
+		System.out.println("Genotype: " + individual.getGenotype().toString());
+		System.out.println("Phenotype: " + individual.getPhenotype().toString());
+		System.out.println("Objectives: " + individual.getObjectives().toString());
+		System.out.println("");
+	  }
+	} catch (Exception e) {
+	  e.printStackTrace();
+	} finally {
+	  task.close();
+	}
+  }
 }

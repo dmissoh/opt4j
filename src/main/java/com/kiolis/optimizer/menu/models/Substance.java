@@ -2,69 +2,69 @@ package com.kiolis.optimizer.menu.models;
 
 public class Substance {
 
-    public enum Type {
-        STARTER, MAIN, DESSERT
-    }
+  protected final int id;
+  protected final Type type;
+  protected final double fruits;//360g per day
+  protected final double dairy;//250g per day
+  protected final double starches;//400g per day
 
-    protected final int id;
+  public Substance(int id, double fruits, double dairy, double starches, Type type) {
+	this.id = id;
 
-    protected final Type type;
+	this.fruits = fruits;
+	this.dairy = dairy;
+	this.starches = starches;
 
-    protected final double fruits;//360g per day
+	this.type = type;
+  }
 
-    protected final double dairy;//250g per day
+  public int getId() {
+	return id;
+  }
 
-    protected final double starches;//400g per day
+  public double getFruits() {
+	return fruits;
+  }
 
-    public Substance(int id, double fruits, double dairy, double starches, Type type) {
-        this.id = id;
+  public double getDairy() {
+	return dairy;
+  }
 
-        this.fruits = fruits;
-        this.dairy = dairy;
-        this.starches = starches;
+  public double getStarches() {
+	return starches;
+  }
 
-        this.type = type;
-    }
+  public Type getType() {
+	return type;
+  }
 
-    public int getId() {
-        return id;
-    }
+  @Override
+  public boolean equals(Object o) {
+	if (this == o) return true;
+	if (!(o instanceof Substance)) return false;
 
-    public double getFruits() {
-        return fruits;
-    }
+	Substance substance = (Substance) o;
 
-    public double getDairy() {
-        return dairy;
-    }
+	if (id != substance.id) return false;
 
-    public double getStarches() {
-        return starches;
-    }
+	return true;
+  }
 
-    public Type getType() {
-        return type;
-    }
+  @Override
+  public int hashCode() {
+	return id;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Substance)) return false;
-
-        Substance substance = (Substance) o;
-
-        if (id != substance.id) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
+  @Override
+  public String toString() {
+	return "Substance{" +
+			"id=" + id +
+			", type=" + type +
+			'}';
+  }
 
     /*
-    @Override
+	@Override
     public String toString() {
         return "Substance{" +
                 "id=" + id +
@@ -76,11 +76,7 @@ public class Substance {
     }
     */
 
-    @Override
-    public String toString() {
-        return "Substance{" +
-                "id=" + id +
-                ", type=" + type +
-                '}';
-    }
+  public enum Type {
+	STARTER, MAIN, DESSERT
+  }
 }

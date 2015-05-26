@@ -7,12 +7,12 @@ import org.opt4j.core.problem.Decoder;
 
 public class MenuDecoder implements Decoder<SelectGenotype<Substance>, Menu> {
 
-    public Menu decode(SelectGenotype<Substance> genotype) {
-        Menu menu = new Menu();
-        for (int i = 0; i < genotype.size(); i++) {
-            menu.add(genotype.getValue(i));
-        }
-        return menu;
-    }
+  public Menu decode(SelectGenotype<Substance> genotype) {
+	Menu menu = new Menu();
+	for (int i = 0; i < genotype.size(); i++) {
+	  menu.add(genotype.getValue(i));
+	}
+	return menu;
+  }
 
 }

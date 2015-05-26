@@ -15,76 +15,74 @@ import java.util.Random;
  */
 public class MenuProblem {
 
-    private int size;
 
-    protected List<Substance> substances = new ArrayList<Substance>();
+  protected List<Substance> substances = new ArrayList<Substance>();
 
-    protected List<Substance> starters = new ArrayList<Substance>();
-    protected List<Substance> mains = new ArrayList<Substance>();
-    protected List<Substance> desserts = new ArrayList<Substance>();
+  protected List<Substance> starters = new ArrayList<Substance>();
+  protected List<Substance> mains = new ArrayList<Substance>();
+  protected List<Substance> desserts = new ArrayList<Substance>();
 
-    @Inject
-    public MenuProblem(@Constant(value = "size") int size) {
-        createNewRandomSubstances(size);
-        starters = getSubstancesForType(Substance.Type.STARTER);
-        mains = getSubstancesForType(Substance.Type.MAIN);
-        desserts = getSubstancesForType(Substance.Type.DESSERT);
-        this.size = size;
-    }
+  @Inject
+  public MenuProblem(@Constant(value = "size") int size) {
+	createNewRandomSubstances(size);
+	starters = getSubstancesForType(Substance.Type.STARTER);
+	mains = getSubstancesForType(Substance.Type.MAIN);
+	desserts = getSubstancesForType(Substance.Type.DESSERT);
+  }
 
-    public List<Substance> getSubstances() {
-        return this.substances;
-    }
+  public int getIndex(Substance substance) {
+	return substances.indexOf(substance);
+  }
 
-    public List<Substance> getStarters() {
-        return starters;
-    }
+  public List<Substance> getSubstancesForType(Substance.Type type) {
+	List<Substance> result = new ArrayList<Substance>();
+	List<Substance> substances = getSubstances();
+	for (Substance substance : substances) {
+	  if (substance.getType() == type) {
+		result.add(substance);
+	  }
+	}
+	return result;
+  }
 
-    public List<Substance> getMains() {
-        return mains;
-    }
+  public List<Substance> getSubstances() {
+	return this.substances;
+  }
 
-    public List<Substance> getDesserts() {
-        return desserts;
-    }
+  public List<Substance> getStarters() {
+	return starters;
+  }
 
-    public int getIndex(Substance substance){
-        return substances.indexOf(substance);
-    }
+  public List<Substance> getMains() {
+	return mains;
+  }
 
-    public List<Substance> getSubstancesForType(Substance.Type type) {
-        List<Substance> result = new ArrayList<Substance>();
-        List<Substance> substances = getSubstances();
-        for (Substance substance : substances) {
-            if (substance.getType() == type) {
-                result.add(substance);
-            }
-        }
-        return result;
-    }
+  public List<Substance> getDesserts() {
+	return desserts;
+  }
 
-    private List<Substance> createNewRandomSubstances(int size) {
-        for (int i = 0; i < size; i++) {
-            // fruits -> 360g per day
-            // dairy  -> 250g per day
-            // starches  -> 400g per day
-            final double fruits = generateRandom(0, 500) / 6;
-            final double dairy = generateRandom(0, 400) / 6;
-            final double starches = generateRandom(0, 900) / 6;
+  private List<Substance> createNewRandomSubstances(int size) {
+	for (int i = 0; i < size; i++) {
+	  // fruits -> 360g per day
+	  // dairy  -> 250g per day
+	  // starches  -> 400g per day
+	  final double fruits = generateRandom(0, 500) / 6;
+	  final double dairy = generateRandom(0, 400) / 6;
+	  final double starches = generateRandom(0, 900) / 6;
 
-            final Substance substance = new Substance(i, fruits, dairy, starches, getRandomType());
-            substances.add(substance);
-        }
-        return substances;
-    }
+	  final Substance substance = new Substance(i, fruits, dairy, starches, getRandomType());
+	  substances.add(substance);
+	}
+	return substances;
+  }
 
-    private Substance.Type getRandomType() {
-        Random random = new Random();
-        return Substance.Type.values()[random.nextInt(3)];
-    }
+  private Substance.Type getRandomType() {
+	Random random = new Random();
+	return Substance.Type.values()[random.nextInt(3)];
+  }
 
-    private double generateRandom(int min, int max) {
-        double random = min + (Math.random() * ((max - min) + 1));
-        return random;
-    }
+  private double generateRandom(int min, int max) {
+	double random = min + (Math.random() * ((max - min) + 1));
+	return random;
+  }
 }
