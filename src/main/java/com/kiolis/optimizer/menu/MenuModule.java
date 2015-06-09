@@ -6,7 +6,7 @@ import org.opt4j.core.start.Constant;
 public class MenuModule extends ProblemModule {
 
   @Constant(value = "size")
-  protected int size = 100000;
+  protected int size = 100;
 
   public int getSize() {
 	return size;

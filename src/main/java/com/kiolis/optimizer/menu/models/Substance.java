@@ -2,24 +2,36 @@ package com.kiolis.optimizer.menu.models;
 
 public class Substance {
 
-  protected final int id;
-  protected final Type type;
-  protected final double fruits;//360g per day
-  protected final double dairy;//250g per day
-  protected final double starches;//400g per day
+  protected final String id;
 
-  public Substance(int id, double fruits, double dairy, double starches, Type type) {
+  protected String label;
+
+  protected Type type;
+
+  protected double fruits;
+
+  protected double dairy;
+
+  protected double starches;
+
+  protected double vegetables;
+
+  protected double meatFishEggs;
+
+  public Substance(String id) {
 	this.id = id;
-
-	this.fruits = fruits;
-	this.dairy = dairy;
-	this.starches = starches;
-
-	this.type = type;
   }
 
-  public int getId() {
+  public String getId() {
 	return id;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
   }
 
   public double getFruits() {
@@ -34,49 +46,80 @@ public class Substance {
 	return starches;
   }
 
+  public double getVegetables() {
+    return vegetables;
+  }
+
+  public double getMeatFishEggs() {
+    return meatFishEggs;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
+  }
+
+  public void setFruits(double fruits) {
+    this.fruits = fruits;
+  }
+
+  public void setDairy(double dairy) {
+    this.dairy = dairy;
+  }
+
+  public void setStarches(double starches) {
+    this.starches = starches;
+  }
+
+  public void setVegetables(double vegetables) {
+    this.vegetables = vegetables;
+  }
+
+  public void setMeatFishEggs(double meatFishEggs) {
+    this.meatFishEggs = meatFishEggs;
+  }
+
   public Type getType() {
 	return type;
   }
 
   @Override
   public boolean equals(Object o) {
-	if (this == o) return true;
-	if (!(o instanceof Substance)) return false;
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-	Substance substance = (Substance) o;
+    Substance substance = (Substance) o;
 
-	if (id != substance.id) return false;
+    return id.equals(substance.id);
 
-	return true;
   }
 
   @Override
   public int hashCode() {
-	return id;
+    return id.hashCode();
   }
 
   @Override
   public String toString() {
-	return "Substance{" +
-			"id=" + id +
-			", type=" + type +
-			'}';
+    return "Substance{" +
+            "label='" + label + '\'' +
+            ", type=" + type +
+            '}';
   }
 
-    /*
-	@Override
-    public String toString() {
-        return "Substance{" +
-                "id=" + id +
-                ", type=" + type +
-                ", fruits=" + fruits +
-                ", dairy=" + dairy +
-                ", starches=" + starches +
-                '}';
-    }
-    */
-
   public enum Type {
-	STARTER, MAIN, DESSERT
+
+    STARTER("CUSTOM_131"),
+    MAIN("CUSTOM_132"),
+    DESSERT("CUSTOM_134");
+
+    private String code;
+
+    Type(String code){
+      this.code = code;
+    }
+
+    public String getCode(){
+      return code;
+    }
   }
 }

@@ -1,6 +1,9 @@
 package com.kiolis.optimizer.menu.models;
 
 import com.google.inject.Inject;
+import com.kiolis.optimizer.menu.data.MyCoachRecipeFetcherImpl;
+import com.kiolis.optimizer.menu.data.RecipeFetcher;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.opt4j.core.start.Constant;
 
 import java.util.ArrayList;
@@ -15,16 +18,27 @@ import java.util.Random;
  */
 public class MenuProblem {
 
-
   protected List<Substance> substances = new ArrayList<Substance>();
 
   protected List<Substance> starters = new ArrayList<Substance>();
   protected List<Substance> mains = new ArrayList<Substance>();
   protected List<Substance> desserts = new ArrayList<Substance>();
 
+  private RecipeFetcher recipeFetcher;
+
   @Inject
   public MenuProblem(@Constant(value = "size") int size) {
-	createNewRandomSubstances(size);
+	//createNewRandomSubstances(size);
+
+	recipeFetcher = new MyCoachRecipeFetcherImpl();
+	List<Substance> substances = new ArrayList<>();
+	try {
+	  recipeFetcher.fetch(substances);
+	  this.substances = substances;
+	} catch (UnirestException e) {
+	  e.printStackTrace();
+	}
+
 	starters = getSubstancesForType(Substance.Type.STARTER);
 	mains = getSubstancesForType(Substance.Type.MAIN);
 	desserts = getSubstancesForType(Substance.Type.DESSERT);
@@ -70,7 +84,13 @@ public class MenuProblem {
 	  final double dairy = generateRandom(0, 400) / 6;
 	  final double starches = generateRandom(0, 900) / 6;
 
-	  final Substance substance = new Substance(i, fruits, dairy, starches, getRandomType());
+	  Substance substance = new Substance(String.valueOf(i));
+	  substance.setDairy(dairy);
+	  substance.setFruits(fruits);
+	  substance.setStarches(starches);
+	  substance.setMeatFishEggs(0);
+	  substance.setVegetables(0);
+	  substance.setType(getRandomType());
 	  substances.add(substance);
 	}
 	return substances;

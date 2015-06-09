@@ -1,6 +1,9 @@
 package com.kiolis.optimizer.menu;
 
 import org.opt4j.core.Individual;
+import org.opt4j.core.Objective;
+import org.opt4j.core.Objectives;
+import org.opt4j.core.Value;
 import org.opt4j.core.optimizer.Archive;
 import org.opt4j.core.start.Opt4JTask;
 import org.opt4j.optimizers.de.DifferentialEvolutionModule;
@@ -52,10 +55,21 @@ public class StartMenuOptimization {
 	  task.execute();
 	  Archive archive = task.getInstance(Archive.class);
 	  for (Individual individual : archive) {
-		System.out.println("Genotype: " + individual.getGenotype().toString());
-		System.out.println("Phenotype: " + individual.getPhenotype().toString());
-		System.out.println("Objectives: " + individual.getObjectives().toString());
-		System.out.println("");
+		
+		Objectives objectives = individual.getObjectives();
+		for (Objective objective : objectives.getKeys()) {
+
+		  if (objective.getName().equals("menu-parts-matches")) {
+			Value<?> value = objectives.get(objective);
+			Double matches = value.getDouble();
+			if (matches == 6) {
+			  System.out.println("Genotype: " + individual.getGenotype().toString());
+			  System.out.println("Phenotype: " + individual.getPhenotype().toString());
+			  System.out.println("Objectives: " + objectives.toString());
+			  System.out.println("");
+			}
+		  }
+		}
 	  }
 	} catch (Exception e) {
 	  e.printStackTrace();
