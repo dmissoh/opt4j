@@ -6,9 +6,14 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.logging.Logger;
 
 /**
@@ -17,26 +22,66 @@ import java.util.logging.Logger;
 public class MyCoachRecipeFetcherImpl implements RecipeFetcher {
 
   private GsonBuilder builder;
+  private DB recipeDb;
+  private ConcurrentNavigableMap<String, Substance> dbMap;
 
   Logger logger = Logger.getLogger(MyCoachRecipeFetcherImpl.class.getName());
 
+  public MyCoachRecipeFetcherImpl() {
+	builder = new GsonBuilder();
+	recipeDb = DBMaker.newFileDB(new File("recipeDb"))
+			.closeOnJvmShutdown()
+			.make();
+	dbMap = recipeDb.getTreeMap("recipes");
+  }
+
   @Override
   public void fetch(List<Substance> substances) throws UnirestException {
-	builder = new GsonBuilder();
-	String href = "http://85.10.209.248:8080/mycoachnutrition/api/recipes?page=1&window=20";
-	int counter = 1;
-	do {
-	  String responseAsJson = executeRequest(href);
-	  System.out.println("Retrieving the page " + counter + "..., we have " + substances.size()  + " recipes");
-	  processResponse(substances, responseAsJson);
-	  Object object = getBuilder().create().fromJson(responseAsJson, Object.class);
-	  Object hrefObject = getNextHref(object);
-	  if (hrefObject != null) {
-		href = (String) getNextHref(object);
+
+	ConcurrentNavigableMap<String, Substance> dbMap = getDbMap();
+	if (dbMap.isEmpty()) {
+	  String href = "http://85.10.209.248:8080/mycoachnutrition/api/recipes?page=1&window=20";
+	  System.out.println("Start retrieving recipes from MCN and store them in the local DB...");
+	  do {
+		String responseAsJson = executeRequest(href);
+		processResponse(substances, responseAsJson);
+		int numberOfRecipes = substances.size();
+		Object object = getBuilder().create().fromJson(responseAsJson, Object.class);
+		int total = (int) ((Double) getValueForKey(object, "total")).doubleValue();
+		int percent = (int) Math.ceil(((float) substances.size() / (float) total * 100));
+		printProgressBar(percent, numberOfRecipes, "recipes");
+		Object hrefObject = getNextHref(object);
+		if (hrefObject != null) {
+		  href = (String) getNextHref(object);
+		} else {
+		  href = null;
+		  printProgressBar(100, numberOfRecipes, "recipes");
+		}
+	  } while (href instanceof String);
+	  System.out.println("");
+	  System.out.println("Done retrieving all recipes!");
+	  System.out.println("");
+	  recipeDb.commit();
+	  recipeDb.close();
+	} else {
+	  Collection<Substance> recipes = dbMap.values();
+	  substances.addAll(recipes);
+	}
+  }
+
+  public static void printProgressBar(int percent, int numberOfItems, String itemsLabel) {
+	StringBuilder bar = new StringBuilder("[");
+	for (int i = 0; i < 50; i++) {
+	  if (i < (percent / 2)) {
+		bar.append("=");
+	  } else if (i == (percent / 2)) {
+		bar.append(">");
+	  } else {
+		bar.append(" ");
 	  }
-	  counter++;
-	} while ((href instanceof String) && substances.size() < 100);
-	System.out.println("Done retrieving all recipes.");
+	}
+	bar.append("]   " + percent + "%     " + numberOfItems + " " + itemsLabel);
+	System.out.print("\r" + bar.toString());
   }
 
   private String executeRequest(String url) throws UnirestException {
@@ -48,6 +93,9 @@ public class MyCoachRecipeFetcherImpl implements RecipeFetcher {
   }
 
   private void processResponse(List<Substance> substances, String json) {
+
+	ConcurrentNavigableMap<String, Substance> dbMap = getDbMap();
+
 	Object object = getBuilder().create().fromJson(json, Object.class);
 	List resources = getListForKey(object, "resources");
 	for (Object resource : resources) {
@@ -92,15 +140,16 @@ public class MyCoachRecipeFetcherImpl implements RecipeFetcher {
 		  }
 		}
 	  }
-	  if(substance.getType() != null){
+	  if (substance.getType() != null) {
 		substances.add(substance);
+		dbMap.put(id, substance);
 	  }
 	}
   }
 
   private String getMealTypeCode(Object resource) {
 	Map mealType = getMapForKey(resource, "mealType");
-	if(mealType != null){
+	if (mealType != null) {
 	  return (String) mealType.get("code");
 	}
 	return null;
@@ -169,6 +218,10 @@ public class MyCoachRecipeFetcherImpl implements RecipeFetcher {
 
   public GsonBuilder getBuilder() {
 	return builder;
+  }
+
+  public ConcurrentNavigableMap<String, Substance> getDbMap() {
+	return dbMap;
   }
 
 }

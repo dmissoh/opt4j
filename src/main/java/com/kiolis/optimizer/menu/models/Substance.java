@@ -1,6 +1,8 @@
 package com.kiolis.optimizer.menu.models;
 
-public class Substance {
+import java.io.Serializable;
+
+public class Substance implements Serializable {
 
   protected final String id;
 

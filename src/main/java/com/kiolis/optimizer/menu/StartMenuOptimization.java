@@ -55,7 +55,7 @@ public class StartMenuOptimization {
 	  task.execute();
 	  Archive archive = task.getInstance(Archive.class);
 	  for (Individual individual : archive) {
-		
+
 		Objectives objectives = individual.getObjectives();
 		for (Objective objective : objectives.getKeys()) {
 
