@@ -10,6 +10,7 @@ public class HelloWorldCreator implements Creator<SelectGenotype<Character>> {
 		  'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' '};
   Random random = new Random();
 
+  // comment
   public SelectGenotype<Character> create() {
 	SelectGenotype<Character> genotype = new SelectGenotype<Character>(ALPHABET);
 	genotype.init(random, 11);
